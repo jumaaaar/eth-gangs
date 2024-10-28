@@ -5,3 +5,8 @@ function Notify(theType, message)
         type = theType
     })
 end
+
+RegisterNetEvent('eth-gangs:Notify')
+AddEventHandler('eth-gangs:Notify', function(theType, message)
+    Notify(theType, message)
+end)

@@ -86,19 +86,19 @@ AddEventHandler('eth-gangs:AddNewMember', function(target, gangName)
     local xTarget = ESX.GetPlayerFromId(target)
     if xPlayer == nil then return end
     if xTarget == nil then
-        SNotify(_source, 3, 'Player not online!')
+        TriggerClientEvent('eth-gangs:Notify',_source, 'error', 'Player not online!')
         return 
     end
     if not CheckPlayerisGang(xTarget.source, gangName) then
-        SNotify(_source, 3, 'The person you are trying to invite is already a member of a gang.')
+        TriggerClientEvent('eth-gangs:Notify',_source, 'error', 'The person you are trying to invite is already a member of a gang.')
         return
     end
 
     MySQL.update('UPDATE users SET gang = ?, gang_rank = ? WHERE identifier = ?', {gangName, '0' , xTarget.identifier}, function(affectedRows)
         if affectedRows then
             TriggerClientEvent('esx:setGang' , xTarget.source , gangName , '0')
-            SNotify(xPlayer.source, 1, 'You hired '..xTarget.name..'!')
-            SNotify(xTarget.source, 1, 'You were hired in the gang by '..xPlayer.name)
+            TriggerClientEvent('eth-gangs:Notify',xPlayer.source, 'success', 'You hired '..xTarget.name..'!')
+            TriggerClientEvent('eth-gangs:Notify',xTarget.source, 'success', 'You were hired in the gang by '..xPlayer.name)
         end
     end)
 end)
@@ -110,7 +110,7 @@ AddEventHandler('eth-gangs:LeaveGang', function(gangName)
     if xPlayer == nil then return end
     MySQL.update('UPDATE users SET gang = ?, gang_rank = ? WHERE identifier = ?', {'none', '0', xPlayer.identifier}, function(affectedRows)
         if affectedRows then
-            SNotify(xPlayer.source, 3, 'You left the gang!')
+            TriggerClientEvent('eth-gangs:Notify',xPlayer.source, 'error', 'You left the gang!')
             TriggerClientEvent('esx:setGang' , xTarget.source , 'none' , '0')
         end
     end)
@@ -124,7 +124,7 @@ AddEventHandler('eth-gangs:KickMember', function(gangName, identifier, membernam
     if xPlayer == nil then return end
     MySQL.update('UPDATE users SET gang = ?, gang_rank = ? WHERE identifier = ?', {'none', '0', identifier}, function(affectedRows)
         if affectedRows then
-            SNotify(xPlayer.source, 1, 'You kicked '..membername..' out of the gang!')
+            TriggerClientEvent('eth-gangs:Notify',xPlayer.source, 'success', 'You kicked '..membername..' out of the gang!')
             if xTarget ~= nil then
                 --xTarget.triggerEvent('esx:setGang', 'none', '0')
                 TriggerClientEvent('esx:setGang' , xTarget.source , 'none' , '0')
@@ -149,7 +149,7 @@ AddEventHandler('eth-gangs:PromoteMember', function(gangName, identifier, member
                 print(newRank)
                 MySQL.update('UPDATE users SET gang = ?, gang_rank = ? WHERE identifier = ?', {gangName, newRank, identifier}, function(affectedRows)
                     if affectedRows then
-                        SNotify(xPlayer.source, 1, 'You promoted '..membername..' to rank '..GetPositionLabel(newRank,gangName)..' in the gang!')
+                        TriggerClientEvent('eth-gangs:Notify',xPlayer.source, 'success', 'You promoted '..membername..' to rank '..GetPositionLabel(newRank,gangName)..' in the gang!')
                         
                         if xTarget ~= nil then
                             --xTarget.triggerEvent('esx:setGang', gangName, newRank)
@@ -196,9 +196,9 @@ AddEventHandler('eth-gangs:DemoteMember', function(gangName, identifier, membern
                 MySQL.update('UPDATE users SET gang = ?, gang_rank = ? WHERE identifier = ?', {newGangName, newRank, identifier}, function(affectedRows)
                     if affectedRows then
                         if isDemotedOut then
-                            SNotify(xPlayer.source, 1, 'You have removed '..membername..' from the gang!')
+                            TriggerClientEvent('eth-gangs:Notify',xPlayer.source, 'success', 'You have removed '..membername..' from the gang!')
                         else
-                            SNotify(xPlayer.source, 1, 'You demoted '..membername..' to rank '..GetPositionLabel(newRank,gangName)..' in the gang!')
+                            TriggerClientEvent('eth-gangs:Notify',xPlayer.source, 'success', 'You demoted '..membername..' to rank '..GetPositionLabel(newRank,gangName)..' in the gang!')
                         end
 
                         if xTarget ~= nil then
@@ -229,10 +229,10 @@ AddEventHandler('eth-gangs:DepositSocietyFunds', function(gangName, Amount)
     if MoneyCount >= Amount then
         MySQL.update('UPDATE `eth-gangs` SET gangFunds = ? WHERE name = ?', {funds + Amount, gangName}, function(affectedRows) end)
         ox_inventory:RemoveItem(_source, 'money', Amount)
-        SNotify(_source, 1,  string.format('you have deposited $%s', ESX.Math.GroupDigits(Amount)))
+        TriggerClientEvent('eth-gangs:Notify',_source, 'success',  string.format('you have deposited $%s', ESX.Math.GroupDigits(Amount)))
     
     else
-        SNotify(_source, 3,  'You don\'t have $'..ESX.Math.GroupDigits(Amount))
+        TriggerClientEvent('eth-gangs:Notify',_source, 'error',  'You don\'t have $'..ESX.Math.GroupDigits(Amount))
     end
 end)
 
@@ -243,9 +243,9 @@ AddEventHandler('eth-gangs:WithdrawSoceityFunds', function(gangName, Amount)
     if funds >= Amount then
         MySQL.update('UPDATE `eth-gangs` SET gangFunds = ? WHERE name = ?', {funds - Amount, gangName}, function(affectedRows) end)
         ox_inventory:AddItem(_source, 'money', Amount)
-        SNotify(_source, 1,  string.format('you have withdrawn $%s', ESX.Math.GroupDigits(Amount)))
+        TriggerClientEvent('eth-gangs:Notify',_source, 'success',  string.format('you have withdrawn $%s', ESX.Math.GroupDigits(Amount)))
     else
-        SNotify(_source, 3, 'Insufficent balance.')
+        TriggerClientEvent('eth-gangs:Notify',_source, 'error', 'Insufficent balance.')
     end
 end)
 
