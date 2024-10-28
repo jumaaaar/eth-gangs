@@ -12,9 +12,10 @@ shared_scripts {
 
 client_scripts{
     -- Config --
+    'shared/gangs.lua',
     'config.lua',
     'config/client_config.lua',
-    'shared/gangs.lua',
+
     'client/modules/exports.lua',
     -- Files --
     'client/**/*.lua'
