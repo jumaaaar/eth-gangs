@@ -9,6 +9,11 @@ Simple Gang Script for ESX
 * Ox Inventory Ready
 * Easy to Configure
 
+#Requirements
+* [ESX](https://documentation.esx-framework.org/legacy/installation/)
+* [ox_lib](https://github.com/overextended/ox_lib)
+* [ox_inventory](https://github.com/overextended/ox_inventory)
+
 #Commands
 ```
 /setgang [id] [gangName] [gangRank] - You can see ranks and gang names on shared/gangs.lua
