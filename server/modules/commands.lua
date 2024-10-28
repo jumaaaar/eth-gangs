@@ -43,27 +43,6 @@ end, {'target:number', 'gangname:string', 'rank:string'})
 
 
 
-
-lib.addCommand('group.admin', {'gpsray'}, function(source, args)
-    
-    local _source = source
-    print(args.gang)
-    if not GetGangName(args.gang) or args.gang == nil then
-        TriggerClientEvent('eth-gangs:Notify', _source, 'error', 'Invalid Gang Name.')
-        return
-    end
-    local gangName = args.gang
-    local paintModel = GetGangSpray(gangName)
-    if paintModel then
-        exports.ox_inventory:AddItem(_source,'spraycan', 1, {
-            model = tonumber(paintModel),
-            name = GetGangLabel(gangName),
-            gang = gangName
-        })
-    end
-end, {'gang:string'})
-
-
 local GangLimit = 0
 lib.addCommand('group.user', {'checkgang', 'gang'}, function(source, args)
     local _source = source
