@@ -2,7 +2,6 @@ local ESX = exports['es_extended']:getSharedObject()
 local PlayerData = {gang = "none", gang_rank = "none"}
 local currentAction = "none"
 
--- Use a single event handler for player loaded and gang update
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
     PlayerData = xPlayer

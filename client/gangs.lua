@@ -1,5 +1,6 @@
 local ox_inventory = exports.ox_inventory
 local ESX = exports["es_extended"]:getSharedObject()
+local PlayerData = {gang = "none", gang_rank = "none"}
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
@@ -14,8 +15,8 @@ end)
 
 RegisterNetEvent('esx:setGang')
 AddEventHandler('esx:setGang', function(gang, gang_rank)
-    ESX.PlayerData.gang = gang
-    ESX.PlayerData.gang_rank = gang_rank
+    PlayerData.gang = gang
+    PlayerData.gang_rank = gang_rank
 end)
 
 local lastActionTime = 0
@@ -25,7 +26,7 @@ local function CanPerformAction()
     local currentTime = GetGameTimer()
     if (currentTime - lastActionTime) < COOLDOWN_TIME then
         local remainingTime = math.ceil((COOLDOWN_TIME - (currentTime - lastActionTime)) / 1000)
-        CNotify(3, ('You must wait %d seconds'):format(remainingTime))
+        Notify('error', ('You must wait %d seconds'):format(remainingTime))
         return false
     end
     lastActionTime = currentTime
@@ -39,7 +40,7 @@ end
 
 local function OpenGangBossAction(gangName, isBoss)
     if not isBoss then
-        return CNotify(3, 'You are not authorized to use this action.')
+        return Notify('error', 'You are not authorized to use this action.')
     end
 
     local gangFunds = lib.callback.await('eth-gangs:getGangAccount', false, gangName)
@@ -80,13 +81,13 @@ end
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
-        if not ESX.PlayerLoaded or ESX.PlayerData.gang == "none" then
+        if not ESX.PlayerLoaded or PlayerData.gang == "none" then
             goto continue
         end
 
         local ped = PlayerPedId()
         local pos = GetEntityCoords(ped)
-        local gangConfig = GangData[ESX.PlayerData.gang]
+        local gangConfig = GangData[PlayerData.gang]
         local isClose = false
 
         -- Stash Location Check
@@ -95,19 +96,19 @@ Citizen.CreateThread(function()
             isClose = true
             ESX.DrawText3D(gangConfig.StashLocation.x, gangConfig.StashLocation.y, gangConfig.StashLocation.z, '[~g~E~w~] Stash')
             if IsControlJustReleased(0, 38) and CanPerformAction() then
-                OpenStashMenu(ESX.PlayerData.gang)
+                OpenStashMenu(PlayerData.gang)
             end
         end
 
         -- Boss Action Check
-        local isBoss = isGangBoss(ESX.PlayerData.gang, ESX.PlayerData.gang_rank)
+        local isBoss = isGangBoss(PlayerData.gang, PlayerData.gang_rank)
         if isBoss then
             local bossActionDist = #(pos - gangConfig.BossActionLocation)
             if bossActionDist < 1.5 then
                 isClose = true
                 ESX.DrawText3D(gangConfig.BossActionLocation.x, gangConfig.BossActionLocation.y, gangConfig.BossActionLocation.z, '[~g~E~w~] Boss Actions')
                 if IsControlJustReleased(0, 38) and CanPerformAction() then
-                    OpenGangBossAction(ESX.PlayerData.gang, isBoss)
+                    OpenGangBossAction(PlayerData.gang, isBoss)
                 end
             end
         end
@@ -177,7 +178,7 @@ AddEventHandler('eth-gangs:GangActions', function(data)
                 if playerId then
                     TriggerServerEvent('eth-gangs:AddNewMember', playerId, data.gangName)
                 else
-                    CNotify(3, 'Invalid Player ID')
+                    Notify('error', 'Invalid Player ID')
                 end
             end
         end,
@@ -244,7 +245,7 @@ AddEventHandler('eth-gangs:SocietyFundsAction', function(data)
 
     local amount = tonumber(input[1])
     if not amount or amount <= 0 then
-        return CNotify(3, 'Invalid Amount.')
+        return Notify('error', 'Invalid Amount.')
     end
 
     if data.action == 'withdraw' then
@@ -254,7 +255,7 @@ AddEventHandler('eth-gangs:SocietyFundsAction', function(data)
         if moneyCount >= amount then
             TriggerServerEvent('eth-gangs:DepositSocietyFunds', data.gangName, amount)
         else
-            CNotify(3, ('You must have $%s to proceed with this action!'):format(ESX.Math.GroupDigits(amount)))
+            Notify('error', ('You must have $%s to proceed with this action!'):format(ESX.Math.GroupDigits(amount)))
         end
     end
 end)

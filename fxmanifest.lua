@@ -7,18 +7,17 @@ lua54 'yes'
 shared_scripts {
     '@ox_lib/init.lua', 
     '@es_extended/imports.lua' , 
+    'shared/gangs.lua',
 }
 
 
 client_scripts{
     -- Config --
-    'shared/gangs.lua',
-    'config.lua',
-    'config/client_config.lua',
-
-    'client/modules/exports.lua',
-    -- Files --
-    'client/**/*.lua'
+    'client/gangs.lua',
+    'client/garage.lua',
+    'config/config.lua',
+    'config/notify.lua',
+    'client/modules/exports.lua'
 }
 
 server_scripts{
@@ -26,14 +25,11 @@ server_scripts{
     '@oxmysql/lib/MySQL.lua',
 
     -- Config --
-    'config.lua',
-    'config/server_config.lua',
+    'config/config.lua',
+    'server/modules/callbacks.lua',
+    'server/modules/commands.lua',
+    'server/modules/commands.lua',
+    'server/gangs.lua',
 
-    -- Files --
-    'server/**/*.lua',
-    'shared/gangs.lua',
---     -- Modules --
---     'server/modules/callbacks.lua',
---     'server/modules/commands.lua',
---     'server/modules/exports.lua'
+
 }

@@ -11,8 +11,3 @@ function SNotify(_source, theType, message)
         TriggerClientEvent('esx:showNotification', _source, 'error', 5000, message, 'GANG')
     end
 end
-
-
-function Notify(src, type, message, duration, color)
-    TriggerClientEvent('ox_lib:notify', src, { type = type, description = message, duration = duration or 5000, position = 'top', style = { color = color or "red" } })
-end
