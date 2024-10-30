@@ -4,20 +4,19 @@ local ox_inventory = exports.ox_inventory
 local GetCurrentResourceName = GetCurrentResourceName()
 GlobalState.isGangTasksLoaded = false
 
-AddEventHandler('onServerResourceStart', function(resourceName)
-    if resourceName == 'ox_inventory' or resourceName == GetCurrentResourceName then
-        for gangName, gangData in pairs(GangData) do
-            local stash = {
-                id = gangName .. '_stash',
-                label = gangData.label .. ' Stash',
-                slots = 1000,
-                weight = 1000000,
-                owner = false,
-                jobs = false
-            }      
-            exports.ox_inventory:RegisterStash(stash.id, stash.label, stash.slots, stash.weight, stash.owner, stash.jobs)
-            exports.ox_inventory:RegisterStash(gangName ..'_boss_stash', gangData.label .. ' Boss Stash', stash.slots, stash.weight, stash.owner, stash.jobs)
-        end
+CreateThread(function()
+	while GetResourceState('ox_inventory') ~= 'started' do Wait(1000) end
+    for gangName, gangData in pairs(GangData) do
+        local stash = {
+            id = gangName .. '_stash',
+            label = gangData.label .. ' Stash',
+            slots = 1000,
+            weight = 1000000,
+            owner = false,
+            jobs = false
+        }      
+        exports.ox_inventory:RegisterStash(stash.id, stash.label, stash.slots, stash.weight, stash.owner, stash.jobs)
+        exports.ox_inventory:RegisterStash(gangName ..'_boss_stash', gangData.label .. ' Boss Stash', stash.slots, stash.weight, stash.owner, stash.jobs)
     end
 end)
 

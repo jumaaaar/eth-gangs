@@ -79,12 +79,10 @@ local function OpenGangBossAction(gangName, isBoss)
 end
 
 Citizen.CreateThread(function()
-    -- Ensure ESX is loaded
     while not ESX.PlayerLoaded do
         Citizen.Wait(100)
     end
     
-    -- Ensure player belongs to a gang
     if PlayerData.gang == "none" then
         return
     end
@@ -93,10 +91,10 @@ Citizen.CreateThread(function()
 
     -- Define Stash Box Zone
     local stashZone = lib.zones.box({
-        coords = gangConfig.StashLocation, -- Central coordinates of the stash location
-        size = vec3(1.5, 1.5, 2),          -- Width, length, and height of the box
-        rotation = 0,                      -- Optional: rotation angle if the zone isn't aligned to cardinal directions
-        debug = false,                     -- Set to true to visualize the zone for testing
+        coords = gangConfig.StashLocation, 
+        size = vec3(1.5, 1.5, 2),          
+        rotation = 0,                      
+        debug = false,                     
         inside = function()
             lib.showTextUI('[E] Stash')
             if IsControlJustReleased(0, 38) and CanPerformAction() then
@@ -108,13 +106,13 @@ Citizen.CreateThread(function()
         end
     })
 
-    -- Define Boss Action Box Zone (only if player is boss)
+  
     if isGangBoss(PlayerData.gang, PlayerData.gang_rank) then
         local bossActionZone = lib.zones.box({
-            coords = gangConfig.BossActionLocation, -- Central coordinates of the boss actions location
-            size = vec3(1.5, 1.5, 2),               -- Width, length, and height of the box
-            rotation = 0,                           -- Optional: rotation angle for this zone
-            debug = false,                          -- Set to true for zone visualization
+            coords = gangConfig.BossActionLocation, 
+            size = vec3(1.5, 1.5, 2),               
+            rotation = 0,                          
+            debug = false,                         
             inside = function()
                 lib.showTextUI('[E] Boss Actions')
                 if IsControlJustReleased(0, 38) and CanPerformAction() then
