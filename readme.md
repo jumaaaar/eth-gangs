@@ -22,6 +22,12 @@ Simple Gang Script for ESX
 /setgang [id] [gangName] [gangRank] - You can see ranks and gang names on shared/gangs.lua
 /leavegang to leave gang
 /checkgang to check current gang
+
+# installation
+* Ensure to install gang sql
+* put eth-gangs on your server.cfg
+
+
 ```
 #Configure Gangs
 * You can set gangs in shared/gangs.lua

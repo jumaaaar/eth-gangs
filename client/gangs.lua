@@ -79,48 +79,54 @@ local function OpenGangBossAction(gangName, isBoss)
 end
 
 Citizen.CreateThread(function()
-    while true do
-        Citizen.Wait(0)
-        if not ESX.PlayerLoaded or PlayerData.gang == "none" then
-            goto continue
-        end
+    -- Ensure ESX is loaded
+    while not ESX.PlayerLoaded do
+        Citizen.Wait(100)
+    end
+    
+    -- Ensure player belongs to a gang
+    if PlayerData.gang == "none" then
+        return
+    end
 
-        local ped = PlayerPedId()
-        local pos = GetEntityCoords(ped)
-        local gangConfig = GangData[PlayerData.gang]
-        local isClose = false
+    local gangConfig = GangData[PlayerData.gang]
 
-        -- Stash Location Check
-        local stashDist = #(pos - gangConfig.StashLocation)
-        if stashDist < 1.5 then
-            isClose = true
-            ESX.DrawText3D(gangConfig.StashLocation.x, gangConfig.StashLocation.y, gangConfig.StashLocation.z, '[~g~E~w~] Stash')
+    -- Define Stash Box Zone
+    local stashZone = lib.zones.box({
+        coords = gangConfig.StashLocation, -- Central coordinates of the stash location
+        size = vec3(1.5, 1.5, 2),          -- Width, length, and height of the box
+        rotation = 0,                      -- Optional: rotation angle if the zone isn't aligned to cardinal directions
+        debug = false,                     -- Set to true to visualize the zone for testing
+        inside = function()
+            lib.showTextUI('[E] Stash')
             if IsControlJustReleased(0, 38) and CanPerformAction() then
                 OpenStashMenu(PlayerData.gang)
             end
+        end,
+        onExit = function()
+            lib.hideTextUI()
         end
+    })
 
-        -- Boss Action Check
-        local isBoss = isGangBoss(PlayerData.gang, PlayerData.gang_rank)
-        if isBoss then
-            local bossActionDist = #(pos - gangConfig.BossActionLocation)
-            if bossActionDist < 1.5 then
-                isClose = true
-                ESX.DrawText3D(gangConfig.BossActionLocation.x, gangConfig.BossActionLocation.y, gangConfig.BossActionLocation.z, '[~g~E~w~] Boss Actions')
+    -- Define Boss Action Box Zone (only if player is boss)
+    if isGangBoss(PlayerData.gang, PlayerData.gang_rank) then
+        local bossActionZone = lib.zones.box({
+            coords = gangConfig.BossActionLocation, -- Central coordinates of the boss actions location
+            size = vec3(1.5, 1.5, 2),               -- Width, length, and height of the box
+            rotation = 0,                           -- Optional: rotation angle for this zone
+            debug = false,                          -- Set to true for zone visualization
+            inside = function()
+                lib.showTextUI('[E] Boss Actions')
                 if IsControlJustReleased(0, 38) and CanPerformAction() then
-                    OpenGangBossAction(PlayerData.gang, isBoss)
+                    OpenGangBossAction(PlayerData.gang, true)
                 end
+            end,
+            onExit = function()
+                lib.hideTextUI()
             end
-        end
-
-        if not isClose then
-            Citizen.Wait(500)
-        end
-
-        ::continue::
+        })
     end
 end)
-
 
 
 RegisterNetEvent('eth-gangs:GangActions')
