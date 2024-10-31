@@ -262,6 +262,25 @@ AddEventHandler('eth-gangs:GetPlayerGang', function(gangName, Amount)
 end)
 
 
+RegisterServerEvent('eth-gangs:server:BuyItems')
+AddEventHandler('eth-gangs:server:BuyItems', function(data)
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)  -- Get the player object
+    local gangConfig = GangData[gangName]  -- Assuming you have a GangData table with gang configs
+    local Amount = 1
+    local itemName = data.itemName
+    local itemCost = data.itemCost
+    if xPlayer.getMoney() >= itemCost then
+        -- Deduct the money
+        xPlayer.removeMoney(itemCost)
+        xPlayer.addInventoryItem(itemName, Amount)
+        TriggerClientEvent('eth-gangs:Notify',_source, 'sucess',"You purchased " .. Amount .. " items for $" .. itemCost)
+    else
+        TriggerClientEvent('eth-gangs:Notify',_source, 'error', "You do not have enough money to buy this item.")
+    end
+end)
+
+
 
 
 -- AddEventHandler('esx:playerLoaded', function(player, xPlayer, isNew)

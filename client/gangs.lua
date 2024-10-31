@@ -12,7 +12,7 @@ end)
 Citizen.CreateThread(function()
     while not ESX.PlayerLoaded do Wait(1000) return end
     TriggerServerEvent('eth-gangs:GetPlayerGang')
-    SetupBlips()
+    SetupZones()
 end)
 
 RegisterNetEvent('esx:setJob')
@@ -64,9 +64,9 @@ local function OpenGangBossAction(gangName, isBoss)
             },
             {
                 title = 'Buy Items',
-                description = 'Open Invite Members Actions',
+                description = 'Buy Weapon / items',
                 event = 'eth-gangs:GangActions',
-                args = { gangName = gangName, value = 'invite_members_action' }
+                args = { gangName = gangName, value = 'buy_items' }
             },
             {
                 title = 'Boss Stash',
@@ -91,7 +91,7 @@ local function OpenGangBossAction(gangName, isBoss)
     lib.showContext('menu_boss_action')
 end
 
-function SetupBlips()
+function SetupZones()
     local inStashZone = false
     local inBossActionZone = false
     Citizen.CreateThread(function()
@@ -100,7 +100,7 @@ function SetupBlips()
             lib.zones.box({
                 coords = vector3(stashZones.x, stashZones.y, stashZones.z),
                 size = vec3(1, 1, 1),
-                debug = true,  
+                debug = false,  
                 onEnter = function()
                     inStashZone = true
                     lib.showTextUI('[E] Stash', {position = "left-center"})
@@ -128,7 +128,7 @@ function SetupBlips()
             lib.zones.box({
                 coords = vector3(bossActionZone.x, bossActionZone.y, bossActionZone.z),
                 size = vec3(1, 1, 1),
-                debug = true,  
+                debug = false,  
                 onEnter = function()
                     inBossActionZone = true
                     lib.showTextUI('[E] Boss Actions', {position = "left-center"})
@@ -156,71 +156,6 @@ end
 
 
 
--- function SetupBlips()
---     Citizen.CreateThread(function()
---         while not ESX.PlayerLoaded do Wait(1000) end
-
---         if PlayerData.gang == "none" then
---             return
---         end
-
---         local gangConfig = GangData[PlayerData.gang]
---         local isInStashZone = false
---         local isInBossActionZone = false
-
---         -- Stash Zone
---         lib.zones.box({
---             coords = gangConfig.StashLocation,
---             size = vec3(1.5, 1.5, 2),
---             rotation = 0,
---             debug = true,
---             onEnter = function()
---                 isInStashZone = true
---                 lib.showTextUI('[E] Stash')
---             end,
---             onExit = function()
---                 lib.hideTextUI()
---                 isInStashZone = false
---             end
---         })
-
---         -- Boss Action Zone (Only if player is a gang boss)
---         if isGangBoss(PlayerData.gang, PlayerData.gang_rank) then
---             lib.zones.box({
---                 coords = gangConfig.BossActionLocation,
---                 size = vec3(1.5, 1.5, 2),
---                 rotation = 0,
---                 debug = true,
---                 onEnter = function()
---                     isInBossActionZone = true
---                     lib.showTextUI('[E] Boss Actions')
---                 end,
---                 onExit = function()
---                     lib.hideTextUI()
---                     isInBossActionZone = false
---                 end
---             })
---         end
-
---         -- Global E Press Event to Check Zones and Open Menu
---         Citizen.CreateThread(function()
---             while true do
---                 Wait(0)
---                 if IsControlJustReleased(0, 38) then  -- [E] key pressed
---                     -- Check if player is in the stash zone and allowed to open the stash
---                     if isInStashZone and CanPerformAction() then
---                         OpenStashMenu(PlayerData.gang)
---                     end
-
---                     -- Check if player is in the boss action zone and allowed to perform boss actions
---                     if isInBossActionZone and CanPerformAction() then
---                         OpenGangBossAction(PlayerData.gang, true)
---                     end
---                 end
---             end
---         end)
---     end)
--- end
 
 RegisterNetEvent('eth-gangs:GangActions')
 AddEventHandler('eth-gangs:GangActions', function(data)
@@ -245,6 +180,22 @@ AddEventHandler('eth-gangs:GangActions', function(data)
                 },
             })
             lib.showContext('society_action_menu')
+        end,
+        buy_items = function()
+            local ItemLists = {}
+            for k, v in pairs(GangData[PlayerData.gang]["ItemShop"]) do
+                table.insert(ItemLists, {
+                    title = v.title .. " - " .. "$" ..ESX.Math.GroupDigits(v.price),
+                    serverEvent = "eth-gangs:server:BuyItems",
+                    args = { itemName = v.name , itemCost = v.price}
+                })
+            end
+            lib.registerContext({
+                id = 'gang_buy_items',
+                title = 'Buy Items',
+                options = ItemLists
+            })
+            lib.showContext('gang_buy_items')
         end,
         gang_members_actions = function()
             lib.callback('eth-gangs:getGangMembers', false, function(members)

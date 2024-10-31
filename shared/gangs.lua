@@ -12,6 +12,10 @@ GangData = {
             ["coords"] = vector4(0,0,0,0),
             ["colors"] = { 141, 0 },
             ["vehicles"] = {},
+        },
+        ["ItemShop"] = {
+            { name = "WEAPON_PISTOL" , title = "Pistol" , price = 1},
+            { name = "bread" , title = "Bread", price = 1}
         }
      },
     santo = {
@@ -34,6 +38,10 @@ GangData = {
                 
             },
 
+        },
+        ["ItemShop"] = {
+            { name = "WEAPON_PISTOL" , title = "Pistol" , price = 99999},
+            { name = "WEAPON_CARBINERIFLE" , title = "Carbine Rifle", price = 9999}
         }
     },
 }
