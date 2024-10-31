@@ -248,11 +248,27 @@ AddEventHandler('eth-gangs:WithdrawSoceityFunds', function(gangName, Amount)
     end
 end)
 
-AddEventHandler('esx:playerLoaded', function(player, xPlayer, isNew)
-    local gangName = GetPlayerGang(xPlayer.source)
-    local gang_rank = GetPlayerGangPosition(xPlayer.source)
+
+
+
+RegisterServerEvent('eth-gangs:GetPlayerGang')
+AddEventHandler('eth-gangs:GetPlayerGang', function(gangName, Amount)
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    local gangName = GetPlayerGang(_source)
+    local gang_rank = GetPlayerGangPosition(_source)
     xPlayer.triggerEvent('esx:setGang', gangName , gang_rank) 
-    if not isNew then
-        print("[ETH-GANGS] "..GetPlayerName(xPlayer.source).." has joined gang "..gangName.." with rank "..GetPositionLabel(gang_rank,gangName))
-    end
+    print("[ETH-GANGS] "..GetPlayerName(_source).." has joined gang "..gangName.." with rank "..GetPositionLabel(gang_rank,gangName))
 end)
+
+
+
+
+-- AddEventHandler('esx:playerLoaded', function(player, xPlayer, isNew)
+--     local gangName = GetPlayerGang(xPlayer.source)
+--     local gang_rank = GetPlayerGangPosition(xPlayer.source)
+--     xPlayer.triggerEvent('esx:setGang', gangName , gang_rank) 
+--     if not isNew then
+--         print("[ETH-GANGS] "..GetPlayerName(xPlayer.source).." has joined gang "..gangName.." with rank "..GetPositionLabel(gang_rank,gangName))
+--     end
+-- end)
