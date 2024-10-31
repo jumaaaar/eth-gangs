@@ -3,11 +3,12 @@ Simple Gang Script for ESX
 
 # Features
 * Vehicle System(You can set Gang Car on Config)
-* Boss Actions and Gang Funds
+* Boss Actions and Gang Funds ( BUY WEAPONS --  CONFIG)
 * Stashes
 * Blips for each Gang Locations
 * Ox Inventory Ready
 * Easy to Configure
+
 
 # Short Showcase
 * [video](https://youtu.be/Q0a4BnBR0w8)
