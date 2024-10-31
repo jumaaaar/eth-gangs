@@ -1,4 +1,4 @@
-lib.addCommand('group.user', {'leavegang', 'quitgang'}, function(source, args)
+lib.__addCommand('group.user', {'leavegang', 'quitgang'}, function(source, args)
     local _source = source
     local GangName = GetPlayerGang(_source)
     if GangName then
@@ -8,7 +8,7 @@ lib.addCommand('group.user', {'leavegang', 'quitgang'}, function(source, args)
     end
 end)
 
-lib.addCommand('group.admin', {'setgang', 'addgang'}, function(source, args)
+lib.__addCommand('group.admin', {'setgang', 'addgang'}, function(source, args)
     
     local _source = source
     local xPlayer = ESX.GetPlayerFromId(_source)
@@ -44,7 +44,7 @@ end, {'target:number', 'gangname:string', 'rank:string'})
 
 
 local GangLimit = 0
-lib.addCommand('group.user', {'checkgang', 'gang'}, function(source, args)
+lib.__addCommand('group.user', {'checkgang', 'gang'}, function(source, args)
     local _source = source
     if (GetGameTimer() - GangLimit) < 5000 then 
         TriggerClientEvent('eth-gangs:Notify', _source, 'error', 'You must wait '..(5 - math.floor((GetGameTimer() - GangLimit) / 1000))..' seconds')
@@ -64,7 +64,7 @@ lib.addCommand('group.user', {'checkgang', 'gang'}, function(source, args)
 end)
 
 
--- lib.addCommand('group.admin', {'removegang'}, function(source, args)
+-- lib.__addCommand('group.admin', {'removegang'}, function(source, args)
 --     local _source = source
 --     local xPlayer = ESX.GetPlayerFromId(_source)
 --     local xTargetID = tonumber(args.target)
