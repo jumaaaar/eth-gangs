@@ -6,14 +6,15 @@ RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
     ESX.PlayerData = xPlayer
     ESX.PlayerLoaded = true
-end)
-
-
-Citizen.CreateThread(function()
-    while not ESX.PlayerLoaded do Wait(1000) return end
     TriggerServerEvent('eth-gangs:GetPlayerGang')
     SetupZones()
 end)
+
+
+-- Citizen.CreateThread(function()
+--     while not ESX.PlayerLoaded do Wait(1000) return end
+
+-- end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
