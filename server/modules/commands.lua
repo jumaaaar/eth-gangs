@@ -2,7 +2,7 @@ lib.__addCommand('group.user', {'leavegang', 'quitgang'}, function(source, args)
     local _source = source
     local GangName = GetPlayerGang(_source)
     if GangName then
-        TriggerClientEvent('cfx-hu-gangs:LeaveGangMenu', _source, GangName)
+        TriggerClientEvent('eth-gangs:LeaveGang', _source, GangName)
     else
         TriggerClientEvent('eth-gangs:Notify', _source, 'error', 'You must have a gang.')
     end

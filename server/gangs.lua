@@ -110,7 +110,7 @@ AddEventHandler('eth-gangs:LeaveGang', function(gangName)
     MySQL.update('UPDATE users SET gang = ?, gang_rank = ? WHERE identifier = ?', {'none', '0', xPlayer.identifier}, function(affectedRows)
         if affectedRows then
             TriggerClientEvent('eth-gangs:Notify',xPlayer.source, 'error', 'You left the gang!')
-            TriggerClientEvent('esx:setGang' , xTarget.source , 'none' , '0')
+            TriggerClientEvent('esx:setGang' , xPlayer.source , 'none' , '0')
         end
     end)
 end)

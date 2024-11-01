@@ -10,12 +10,6 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
     SetupZones()
 end)
 
-
--- Citizen.CreateThread(function()
---     while not ESX.PlayerLoaded do Wait(1000) return end
-
--- end)
-
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
     ESX.PlayerData.job = job
@@ -137,10 +131,10 @@ function SetupZones()
                         while inBossActionZone do
                             Wait(0)
                             if IsControlJustPressed(0, 38) then
-                                if PlayerData.gang ~= gangname and not isGangBoss(PlayerData.gang, PlayerData.gang_rank) then
-                                    TriggerEvent('esx:showNotification', 'error', 5000, "You can't access this", 'GANGS')
-                                else
+                                if PlayerData.gang == gangname and isGangBoss(PlayerData.gang, PlayerData.gang_rank) then
                                     OpenGangBossAction(PlayerData.gang, true)
+                                else
+                                    TriggerEvent('esx:showNotification', 'error', 5000, "You can't access this", 'GANGS')
                                 end
                             end
                         end
@@ -242,6 +236,20 @@ AddEventHandler('eth-gangs:GangActions', function(data)
     if action then action() end
 end)
 
+RegisterNetEvent('eth-gangs:LeaveGang')
+AddEventHandler('eth-gangs:LeaveGang', function(GangName)
+    local alert = lib.alertDialog({
+        header = 'Leave Gang',
+        content = 'Are you sure you want to leave the gang?',
+        centered = true,
+        cancel = true
+    })
+    
+    if alert == 'confirm' then
+        TriggerServerEvent('eth-gangs:LeaveGang', GangName)
+    end
+end)
+
 RegisterNetEvent('eth-gangs:OpenMembersAction')
 AddEventHandler('eth-gangs:OpenMembersAction', function(data)
     lib.registerContext({
@@ -333,3 +341,4 @@ Citizen.CreateThread(function()
         end
     end
 end)
+
