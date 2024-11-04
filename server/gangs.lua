@@ -40,7 +40,6 @@ lib.callback.register('eth-gangs:getGangMembers', function(source, gangName)
                     grade = row.gang_rank,
                 }
             }
-            -- Correctly insert the member data into the members table
             table.insert(members, memberdata)
         end
     end
@@ -145,7 +144,12 @@ AddEventHandler('eth-gangs:PromoteMember', function(gangName, identifier, member
             local currentRank = tonumber(result[1].gang_rank)
             if currentRank then
                 local newRank = currentRank + 1
-                print(newRank)
+                
+                if not isValidRank(gangName , newRank) then
+                    TriggerClientEvent('eth-gangs:Notify',xPlayer.source, 'success', "The person you are trying to promote already has the highest position")
+                    return
+                end
+
                 MySQL.update('UPDATE users SET gang = ?, gang_rank = ? WHERE identifier = ?', {gangName, newRank, identifier}, function(affectedRows)
                     if affectedRows then
                         TriggerClientEvent('eth-gangs:Notify',xPlayer.source, 'success', 'You promoted '..membername..' to rank '..GetPositionLabel(newRank,gangName)..' in the gang!')

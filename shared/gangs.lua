@@ -18,6 +18,42 @@ GangData = {
             { name = "bread" , title = "Bread", price = 1}
         }
      },
+     geng = { 
+        label = 'Geng', 
+        grades = { 
+            ['0'] = { name = 'Unaffiliated' } 
+        },
+        ["blipColor"] = 0,
+        ["StashLocation"] =  vec3(0,0,0),
+        ["BossActionLocation"] = vec3(0,0,0),
+        ["VehicleActions"] =  {
+            ["coords"] = vector4(0,0,0,0),
+            ["colors"] = { 141, 0 },
+            ["vehicles"] = {},
+        },
+        ["ItemShop"] = {
+            { name = "WEAPON_PISTOL" , title = "Pistol" , price = 1},
+            { name = "bread" , title = "Bread", price = 1}
+        }
+     },
+     geng2 = { 
+        label = 'Geng2', 
+        grades = { 
+            ['0'] = { name = 'Unaffiliated' } 
+        },
+        ["blipColor"] = 0,
+        ["StashLocation"] =  vec3(0,0,0),
+        ["BossActionLocation"] = vec3(0,0,0),
+        ["VehicleActions"] =  {
+            ["coords"] = vector4(0,0,0,0),
+            ["colors"] = { 141, 0 },
+            ["vehicles"] = {},
+        },
+        ["ItemShop"] = {
+            { name = "WEAPON_PISTOL" , title = "Pistol" , price = 1},
+            { name = "bread" , title = "Bread", price = 1}
+        }
+     },
     santo = {
         label = 'S A N T O',
         grades = {

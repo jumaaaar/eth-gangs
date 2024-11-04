@@ -32,7 +32,6 @@ function GetGangLabel(gangName)
 end
 
 function GetPositionLabel(GangRank,PlayerGang)
-    print(GangRank,PlayerGang)
     local GangPositionLabel = GangData[PlayerGang]['grades'][GangRank]['name']
     if GangPositionLabel ~= nil then
         return GangPositionLabel
