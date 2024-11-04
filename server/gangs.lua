@@ -137,20 +137,19 @@ AddEventHandler('eth-gangs:PromoteMember', function(gangName, identifier, member
     local xPlayer = ESX.GetPlayerFromId(_source)
     local xTarget = ESX.GetPlayerFromIdentifier(identifier)
     if xPlayer == nil then return end
-    print(gangName, identifier, membername)
     -- Retrieve current gang rank first
     MySQL.query('SELECT gang_rank FROM users WHERE identifier = ?', {identifier}, function(result)
         if result and result[1] then
             local currentRank = tonumber(result[1].gang_rank)
             if currentRank then
                 local newRank = currentRank + 1
-                
-                if not isValidRank(gangName , newRank) then
-                    TriggerClientEvent('eth-gangs:Notify',xPlayer.source, 'success', "The person you are trying to promote already has the highest position")
+
+                if not isValidRank(gangName , tostring(newRank)) then
+                    TriggerClientEvent('eth-gangs:Notify',xPlayer.source, 'error', "The person you are trying to promote already has the highest position")
                     return
                 end
 
-                MySQL.update('UPDATE users SET gang = ?, gang_rank = ? WHERE identifier = ?', {gangName, newRank, identifier}, function(affectedRows)
+                MySQL.update('UPDATE users SET gang = ?, gang_rank = ? WHERE identifier = ?', {gangName, tostring(newRank), identifier}, function(affectedRows)
                     if affectedRows then
                         TriggerClientEvent('eth-gangs:Notify',xPlayer.source, 'success', 'You promoted '..membername..' to rank '..GetPositionLabel(newRank,gangName)..' in the gang!')
                         

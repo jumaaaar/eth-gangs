@@ -12,20 +12,20 @@ shared_scripts {
 
 client_scripts{
     -- Config --
+    'config/config.lua',
     'shared/gangs.lua',
     'client/gangs.lua',
     'client/garage.lua',
-    'config/config.lua',
     'config/notify.lua',
     'client/modules/exports.lua'
 }
 
 server_scripts{
     -- Core --
+    'config/config.lua',
     '@oxmysql/lib/MySQL.lua',
     'shared/gangs.lua',
     -- Config --
-    'config/config.lua',
     'server/modules/callbacks.lua',
     'server/modules/commands.lua',
     'server/modules/exports.lua',

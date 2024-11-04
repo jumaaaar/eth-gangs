@@ -92,11 +92,12 @@ end
 
 function isValidRank(gangName , gankRank)
     local Gang = GangData[gangName]
+
     if not Gang then
         return false
     end
 
-    if Gang['grades']['gankRank'] then
+    if not Gang['grades'][gankRank] then
         return false
     end
 

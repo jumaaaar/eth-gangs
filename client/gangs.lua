@@ -319,26 +319,29 @@ AddEventHandler('eth-gangs:SocietyFundsAction', function(data)
     end
 end)
 
--- Blips Creation
-Citizen.CreateThread(function()
-    for gangName, gangData in pairs(GangData) do
-        if gangName ~= "none" then
-            local blipPos = gangData.BossActionLocation
-            local radiusBlip = AddBlipForRadius(blipPos, 50.0)
-            local blip = AddBlipForCoord(blipPos.x, blipPos.y, blipPos.z)
-            
-            SetBlipSprite(blip, 378)
-            SetBlipScale(blip, 0.6)
-            SetBlipAsShortRange(blip, true)
-            SetBlipColour(blip, 1)
-            
-            BeginTextCommandSetBlipName("STRING")
-            AddTextComponentString(gangData.label)
-            EndTextCommandSetBlipName(blip)
-            
-            SetBlipColour(radiusBlip, gangData.blipColor)
-            SetBlipAlpha(radiusBlip, 128)
+
+if Config.EnableBaseBlips then
+    -- Blips Creation
+    Citizen.CreateThread(function()
+        for gangName, gangData in pairs(GangData) do
+            if gangName ~= "none" then
+                local blipPos = gangData.BossActionLocation
+                local radiusBlip = AddBlipForRadius(blipPos, 50.0)
+                local blip = AddBlipForCoord(blipPos.x, blipPos.y, blipPos.z)
+                
+                SetBlipSprite(blip, 378)
+                SetBlipScale(blip, 0.6)
+                SetBlipAsShortRange(blip, true)
+                SetBlipColour(blip, 1)
+                
+                BeginTextCommandSetBlipName("STRING")
+                AddTextComponentString(gangData.label)
+                EndTextCommandSetBlipName(blip)
+                
+                SetBlipColour(radiusBlip, gangData.blipColor)
+                SetBlipAlpha(radiusBlip, 128)
+            end
         end
-    end
-end)
+    end)
+end
 
